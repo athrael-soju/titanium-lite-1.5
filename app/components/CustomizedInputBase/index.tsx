@@ -3,11 +3,13 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import LongTermMemoryIcon from '@mui/icons-material/Psychology';
+import AssistantIcon from '@mui/icons-material/Assistant';
 import VisionIcon from '@mui/icons-material/Visibility';
 import RagIcon from '@mui/icons-material/Storage';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useCustomInput } from '@/app/hooks/useCustomInput';
+import AssistantDialog from '../Assistant';
 import { RecordVoiceOver } from '@mui/icons-material';
 import { Menu, MenuItem, ListItemIcon, Tooltip } from '@mui/material';
 import { Microphone } from '../Speech/stt';
@@ -95,6 +97,12 @@ const CustomizedInputBase = ({
             </ListItemIcon>
             Speech
           </MenuItem>
+          <MenuItem onClick={() => toggleDialog('assistant')}>
+            <ListItemIcon>
+              <AssistantIcon />
+            </ListItemIcon>
+            Assistant
+          </MenuItem>
           <MenuItem onClick={() => toggleDialog('vision')}>
             <ListItemIcon>
               <VisionIcon fontSize="small" />
@@ -133,6 +141,11 @@ const CustomizedInputBase = ({
       <SpeechDialog
         open={isDialogOpen.speech}
         onClose={() => toggleDialog('speech')}
+      />
+
+      <AssistantDialog
+        open={isDialogOpen.assistant}
+        onClose={() => toggleDialog('assistant')}
       />
 
       <VisionDialog

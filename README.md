@@ -3,6 +3,7 @@
 Titanium is a modern web application built with Next.js, leveraging the latest OpenAI APIs to offer an advanced Generative and Conversational AI experience. It's still pretty much a prototype, but I think it's a good start. Here's a list of some of the features:
 
 - Multi-user Authentication using next-auth, including a custom CredentialProvider for guest accounts. ✅
+- Customizable, Multipurpose Assistants with File Upload support. Also supports complete deletion of all Assistant related data.✅
 - Streaming chat - simple chat allowing you to chat with AI in a seamless manner. ✅
 - Speech (TTS) ✅ (Supports tts-1 and tts-1-hd and all available voice models)
 - Speech (STT) ✅ (Available via button toggle in the input chat box)
@@ -139,6 +140,7 @@ To access the features, you can click the hamburger icon at the left of the inpu
 - Vision
 - R.A.G. (Retrieval Augmented Generation)
 - Memory
+- Assistant
 
 ## Streaming Chat
 
@@ -177,23 +179,37 @@ Persistent memory enhances user interaction by recording and storing chat histor
 - Memory Type: The type of database technology to leverage - you can choose between "NoSQL" to use MongoDB or "Vector" to use Pinecone.
 - History Length: The number of chat messages to store in memory - you can choose between "None", "10", "20", "50" and "100". 
 
+## Assistant
+
+![image](https://github.com/athrael-soju/Titanium/assets/25455658/6909c5a9-115b-436e-85ea-8434d35a92e8)
+
+The Assistant is an OpenAI feature that allows you to create and manage your own AI assistant.
+You can:
+
+- Specify a Name,
+- Set a description, which the Assistant will abide to.
+- Upload files, which the AI will use to generate responses.
+- Delete the assistant and all associated files by pressing "DELETE" and confirming in a followup dialog. This is non reversible.
+
+The Assistant is a handy tool, which comes with R.A.G. and Long term memory, as well as capabilities to interpret and generate code. However, it does not yet support streaming chat and costs more to use.
+
 # Feature Combinations
 
 Some features can play really well together. For example:
 
-- All features are used in conjunction with the Streaming Chat feature. This means that you can use R.A.G., Vision, and Speech in the chat, allowing you to query the AI with documents, images, and speech, respectively and receive a response in real time.
+- All features, except the Assistant are used in conjunction with the Streaming Chat feature. This means that you can use R.A.G., Vision, and Speech in the chat, allowing you to query the AI with documents, images, and speech, respectively and receive a response in real time.
 - Speech can be used in conjunction with any other feature, allowing you to speak to the AI instead of typing. This can be especially useful if you're on the go or if you have a disability that makes typing difficult.
 - Vision, combined with Text to Speech, as well as Speech to Text, can be a great tool when accessibility is a concern. For example, you can use Vision to analyze an image, verbally ask the AI a question about the image, and then have the AI respond with a verbal answer, as well.
 
 # Feature Limitations
 
-Since some features have contradicting functionalities, when one is enabled, others will be disabled. So, enabling either R.A.G. or Vision will disable the others. This is because each of these features involve uploading files, which they use to draw information from.
+Since some features have contradicting functionalities, when one is enabled, others will be disabled. So, enabling either the Assistant, R.A.G., or Vision will disable the others. This is because each of these features involve uploading files, which they use to draw information from.
 
 # General Notes
 
 - Disabling all features will revert chat to the default streaming chat, without any context or memory.
 - When making changes to the features, you'll need to click "UPDATE" to save any changes. These changes will persist even after you log out, for your respective account.
-- When deleting files with R.A.G. they will also be deleted from the Pinecone Index. This is to support data privacy and security.
+- When deleting files with R.A.G. they will also be deleted from the Pinecone Index. This is to support data privacy and security. The same applies to the Assistant, where all files will be deleted from the OpenAI server.
 
 # Deploy on Vercel
 
