@@ -11,6 +11,7 @@ export const useCustomInput = ({ onSendMessage }: UseCustomInputProps) => {
   const { data: session } = useSession();
   const [inputValue, setInputValue] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState({
+    assistant: false,
     rag: false,
     speech: false,
     vision: false,
@@ -22,8 +23,23 @@ export const useCustomInput = ({ onSendMessage }: UseCustomInputProps) => {
   const prefetchServices = useCallback(async () => {
     const userEmail = session?.user?.email as string;
 
-    // Prefetch speech data
+    // Prefetch assistant data
     let response = await retrieveServices({
+      userEmail,
+      serviceName: 'assistant',
+    });
+    if (response.assistant) {
+      setValue('name', response.assistant.name);
+      setValue('description', response.assistant.instructions);
+      setValue('isAssistantEnabled', response.isAssistantEnabled);
+      setValue('assistantFiles', response.fileList);
+      setValue('isAssistantDefined', true);
+    } else {
+      setValue('isAssistantDefined', false);
+    }
+
+    // Prefetch speech data
+    response = await retrieveServices({
       userEmail,
       serviceName: 'speech',
     });

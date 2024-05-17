@@ -3,7 +3,9 @@ interface IUser {
   name: string;
 
   // assistant
+  assistantId?: string | null;
   isAssistantEnabled: boolean;
+  threadId?: string | null;
 
   // speech
   isTextToSpeechEnabled: boolean;

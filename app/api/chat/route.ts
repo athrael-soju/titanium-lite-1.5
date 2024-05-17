@@ -15,6 +15,28 @@ export async function POST(req: NextRequest) {
   return await handlePostRequest(req);
 }
 
+async function fetchAssistantMessage(
+  threadId: string,
+  assistantId: string,
+  userMessage: string
+) {
+  await openai.beta.threads.messages.create(threadId, {
+    role: 'user',
+    content: userMessage,
+  });
+
+  let run = await openai.beta.threads.runs.create(threadId, {
+    assistant_id: assistantId,
+  });
+  while (run.status !== 'completed') {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    run = await openai.beta.threads.runs.retrieve(threadId, run.id);
+  }
+
+  const messages = await openai.beta.threads.messages.list(threadId);
+  return messages.data.find((message) => message.role === 'assistant');
+}
+
 async function handlePostRequest(req: NextRequest) {
   try {
     const { userMessage, userEmail } = await req.json();
@@ -25,6 +47,31 @@ async function handlePostRequest(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    }
+
+    if (user.isAssistantEnabled && user.assistantId && user.threadId) {
+      const assistantMessage = await fetchAssistantMessage(
+        user.threadId,
+        user.assistantId,
+        userMessage
+      );
+
+      if (!assistantMessage) {
+        return NextResponse.json(
+          { error: 'No assistant message found' },
+          { status: 404 }
+        );
+      }
+
+      const assistantMessageContent = assistantMessage.content.at(0);
+      if (!assistantMessageContent || !('text' in assistantMessageContent)) {
+        return NextResponse.json(
+          { error: 'No valid assistant message content found' },
+          { status: 404 }
+        );
+      }
+
+      return new Response(assistantMessageContent.text.value);
     }
 
     let model = process.env.OPENAI_API_MODEL as string,
